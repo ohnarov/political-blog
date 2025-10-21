@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USA Political Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .controls h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1e3c72;
+        }
+        
+        .source-toggle {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .source-toggle label {
+            flex: 1;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .source-toggle input {
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+        
+        button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2a5298;
+        }
+        
+        button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        article {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #1e3c72;
+        }
+        
+        article h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #1e3c72;
+        }
+        
+        .meta {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        article p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e3c72;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            article {
+                padding: 1.5rem;
+            }
+            
+            article h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🇺🇸 USA Political Analysis</h1>
+        <p>AI-Generated Insights on American Politics</p>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <h2>Content Sources</h2>
+            <div class="source-toggle">
+                <input type="checkbox" id="politico" checked>
+                <label for="politico">Politico - Breaking political news</label>
+            </div>
+            <div class="source-toggle">
+                <input type="checkbox" id="fivethirtyeight" checked>
+                <label for="fivethirtyeight">FiveThirtyEight - Polling data & analysis</label>
+            </div>
+            <div class="source-toggle">
+                <input type="checkbox" id="realclear" checked>
+                <label for="realclear">RealClearPolitics - Poll aggregation</label>
+            </div>
+            <div class="source-toggle">
+                <input type="checkbox" id="thehill" checked>
+                <label for="thehill">The Hill - Congressional coverage</label>
+            </div>
+            
+            <button onclick="generateContent()" id="generateBtn">
+                Generate New Content
+            </button>
+            
+            <div id="status" class="status"></div>
+        </div>
+
+        <div id="posts">
+            <!-- Sample posts will be loaded here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>AI-Generated Political Analysis | Content for informational purposes only</p>
+        <p>Always verify information with primary sources</p>
+    </footer>
+
+    <script>
+        // Sample posts data (in real deployment, this would come from API)
+        const samplePosts = [
+            {
+                title: "Swing State Polling Dynamics: October 2025 Analysis",
+                date: "October 21, 2025",
+                content: `The latest polling data from key battleground states reveals a tightening race with several noteworthy trends emerging. Pennsylvania continues to show the most volatility, with margins fluctuating within the margin of error over the past two weeks.
+
+In Michigan, suburban counties are displaying unexpected shifts in voter sentiment, particularly among independent voters who have historically swung elections. The demographic breakdown suggests that economic concerns remain the primary driver of voter preferences, outweighing social issues by a significant margin.
+
+Arizona and Nevada present contrasting pictures. While Arizona's electorate appears to be stabilizing around traditional partisan lines, Nevada shows increased volatility among Hispanic voters, a crucial demographic that comprises nearly 30% of the state's electorate.
+
+Wisconsin's polling averages have remained remarkably stable, though turnout models suggest that changes in voter enthusiasm could shift outcomes by several percentage points. The state's history of razor-thin margins means that ground game operations will likely determine the final result.
+
+Looking ahead, these polling trends suggest that the electoral map remains highly competitive, with multiple pathways to victory for both major parties. The next few weeks will be critical as campaigns deploy resources to these decisive battlegrounds.`
+            },
+            {
+                title: "Congressional Approval Ratings: Historical Context and Current Trends",
+                date: "October 19, 2025",
+                content: `Congressional approval ratings have reached a new equilibrium point, settling near historical averages after several years of heightened polarization. Current data shows Congress hovering around 25% approval, consistent with patterns observed over the past decade.
+
+The partisan divide in approval ratings remains stark, with members of the president's party showing approval rates 40-50 percentage points higher than opposition party members. This hyper-partisanship reflects broader trends in American political culture and suggests that institutional approval has become largely tied to partisan identification.
+
+Economic legislation passed in recent months has had minimal impact on overall approval numbers, though specific constituencies have responded positively to targeted policy initiatives. Infrastructure spending and technology regulation have generated bipartisan interest among voters, even as congressional voting patterns remain largely partisan.
+
+Regional variations in congressional approval provide insights into electoral dynamics. Districts with competitive races show more moderate approval ratings, while safe seats correlate with more extreme partisan assessments. This pattern reinforces the notion that electoral competition may moderate both voter opinions and representative behavior.
+
+The implications for upcoming elections are significant. While low congressional approval typically suggests voter appetite for change, the partisan nature of these ratings means that anger at "Congress" often doesn't translate into opposition to one's own representative. This dynamic has contributed to the high incumbent reelection rates seen in recent cycles despite persistently low institutional approval.`
+            },
+            {
+                title: "Presidential Campaign Strategy: Media, Messaging, and Mobilization",
+                date: "October 17, 2025",
+                content: `Modern presidential campaigns have evolved into sophisticated data-driven operations that bear little resemblance to the campaigns of even a decade ago. Current strategies emphasize micro-targeting, digital engagement, and precise resource allocation based on real-time analytics.
+
+The media landscape for campaigns has fragmented dramatically. Traditional broadcast advertising, while still important, now competes with streaming platforms, social media, podcasts, and influencer partnerships. Campaigns must navigate this complex ecosystem while maintaining message consistency across diverse channels.
+
+Messaging strategies have become increasingly personalized, with campaigns deploying different narratives to different demographic and geographic segments. This micro-targeting allows for tailored appeals but raises questions about message authenticity and the creation of separate information environments for different voter groups.
+
+Ground game operations remain crucial despite technological advances. Door-to-door canvassing, phone banking, and community organizing still drive voter turnout in ways that digital engagement cannot fully replicate. The most effective campaigns integrate traditional field operations with modern data analytics to optimize volunteer deployment and voter contact strategies.
+
+Early voting and mail-in voting have transformed campaign timelines, requiring sophisticated tracking systems to monitor ballot returns and adjust targeting in real-time. This extended voting period means campaigns must sustain enthusiasm and messaging consistency over weeks rather than building to a single Election Day crescendo.
+
+The financial demands of modern campaigns continue to escalate, with fundraising operations becoming increasingly professionalized and donor cultivation extending far beyond election cycles. Small-dollar online fundraising has democratized campaign finance to some degree, though large donors and PAC spending remain influential factors in competitive races.`
+            }
+        ];
+
+        // Load posts on page load
+        function loadPosts() {
+            const postsContainer = document.getElementById('posts');
+            postsContainer.innerHTML = samplePosts.map(post => `
+                <article>
+                    <h2>${post.title}</h2>
+                    <div class="meta">Published ${post.date}</div>
+                    ${post.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+                </article>
+            `).join('');
+        }
+
+        // Generate content function (simulated - in real deployment would call API)
+        async function generateContent() {
+            const btn = document.getElementById('generateBtn');
+            const status = document.getElementById('status');
+            const postsContainer = document.getElementById('posts');
+            
+            // Get enabled sources
+            const sources = {
+                politico: document.getElementById('politico').checked,
+                fivethirtyeight: document.getElementById('fivethirtyeight').checked,
+                realclear: document.getElementById('realclear').checked,
+                thehill: document.getElementById('thehill').checked
+            };
+            
+            const enabledSources = Object.keys(sources).filter(k => sources[k]);
+            
+            if (enabledSources.length === 0) {
+                showStatus('Please enable at least one source', 'error');
+                return;
+            }
+            
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+            
+            postsContainer.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Generating fresh political analysis from ${enabledSources.length} source(s)...</p>
+                </div>
+            `;
+            
+            // Simulate API call (in real deployment, this would call your GitHub Action or API)
+            setTimeout(() => {
+                showStatus(`Successfully generated content using: ${enabledSources.join(', ')}`, 'success');
+                loadPosts();
+                btn.disabled = false;
+                btn.textContent = 'Generate New Content';
+            }, 3000);
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+
+        // Load posts on page load
+        loadPosts();
+    </script>
+</body>
+              </html>
