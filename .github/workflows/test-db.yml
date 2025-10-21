@@ -1,0 +1,18 @@
+name: Test Database Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test DB Connection
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          
+          # Extract connection details and test
+          psql "$DATABASE_URL" -c "SELECT version();
