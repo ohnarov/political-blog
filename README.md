@@ -1,2 +1,2 @@
 # political-blog
-https://yourusername.github.io/political-blog
+https://ohnarov.github.io/political-blog
